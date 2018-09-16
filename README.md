@@ -9,3 +9,5 @@
 ## Edit
 * using this site to get longitude and latitude. 
 * then edit the `map/text.txt` with the fomat `华山站|110.146287,34.560764`
+## Display
+![error](readme/demo.png)
