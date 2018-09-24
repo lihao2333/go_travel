@@ -18,17 +18,19 @@ function initMap(){
 //创建地图函数：
 function createMap(){
     var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
-
-    {%for xx in res%}
-    var point{{forloop.counter0}} = new BMap.Point({{xx.ip}});//定义一个中心点坐标
-    var marker{{forloop.counter0}} = new BMap.Marker(point{{forloop.counter0}});
-    var label{{forloop.counter0}} = new BMap.Label("{{xx.title}}",{offset:new BMap.Size(-20,-50)}); 
-   label{{forloop.counter0}}.setStyle({ color : "red", fontSize : "12px", height : "20px", lineHeight : "20px", fontFamily:"微软雅黑" });
-   marker{{forloop.counter0}}.setLabel(label{{forloop.counter0}});
-    map.addOverlay(marker{{forloop.counter0}});
-    {%endfor%}
-
-    map.centerAndZoom(point0,10);//设定地图的中心点和坐标并将地图显示在地图容器中
+    var names = [{%for section in sections%}"{{section.name}}"{%if not forloop.last%},{%endif%}{%endfor%}];
+    var points = [{%for section in sections%}new BMap.Point({{section.loc|truncatewords:"1"}}){%if not forloop.last%},{%endif%}{%endfor%}];{%comment%}如果不加truncatewords, loc后会被插入回车导致报错{%endcomment%}
+    var marker = new Array(names.length);
+    var label = new Array(names.length);
+    var style = { color : "red", fontSize : "12px", height : "20px", lineHeight : "20px", fontFamily:"微软雅黑" };
+    for(var i=0;i<names.length;i++){
+        marker[i] = new BMap.Marker(points[i]);
+        label[i] = new BMap.Label(names[i],{offset:new BMap.Size(-20,-50)});
+        label[i].setStyle(style);
+        marker[i].setLabel(label[i]);
+        map.addOverlay(marker[i]);
+    }
+    map.centerAndZoom(points[0],10);//设定地图的中心点和坐标并将地图显示在地图容器中
     window.map = map;//将map变量存储在全局
 }
 //地图事件设置函数：
